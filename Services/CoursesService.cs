@@ -39,11 +39,11 @@ public class CoursesService : ICoursesService
 
         courses = sortOrder switch
         {
-            "title_desc" => courses.OrderByDescending(s => s.CourseID),
-            "topic" => courses.OrderBy(s => s.CourseName),
-            "topic_desc" => courses.OrderByDescending(s => s.CourseName),
-            "release_date" => courses.OrderBy(s => s.Teacher),
-            "release_date_desc" => courses.OrderByDescending(s => s.Teacher),
+            "CourseID_desc" => courses.OrderByDescending(s => s.CourseID),
+            "CourseName" => courses.OrderBy(s => s.CourseName),
+            "CourseName_desc" => courses.OrderByDescending(s => s.CourseName),
+            "Teacher_date" => courses.OrderBy(s => s.Teacher),
+            "Teacher_date_desc" => courses.OrderByDescending(s => s.Teacher),
             _ => courses.OrderBy(s => s.CourseID),
         };
 

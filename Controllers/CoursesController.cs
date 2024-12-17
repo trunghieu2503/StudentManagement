@@ -25,9 +25,9 @@ namespace StudentManagement.Controllers
         // GET: Courses
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("title") ? "title_desc" : "";
-            ViewData["TopicSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("topic") ? "topic_desc" : "topic";
-            ViewData["ReleaseDateSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("release_date") ? "release_date_desc" : "release_date";
+            ViewData["CourseIDSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("CourseID") ? "CourseID_desc" : "";
+            ViewData["CourseNameSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("CourseName") ? "CourseName_desc" : "CourseName";
+            ViewData["TeacherSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("Teacher_date") ? "Teacher_date_desc" : "Teacher_date";
 
             ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentSort"] = sortOrder;
