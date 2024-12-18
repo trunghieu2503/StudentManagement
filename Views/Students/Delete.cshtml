@@ -12,6 +12,11 @@
     <h4>Student</h4>
     <hr />
     <dl class="row">
+        @if (!string.IsNullOrEmpty(@Model.ImagePath))
+        {
+            <dt class="col-sm-2"><img src="@Model.ImagePath" width="30%"></dt>
+            <dd></dd>  
+        }
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.StudentId)
         </dt>

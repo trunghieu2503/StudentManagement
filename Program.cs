@@ -16,6 +16,8 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddTransient<ICoursesService, CoursesService>();
 builder.Services.AddTransient<IStudentService, StudentService>();
 
+//File Storage
+builder.Services.AddTransient<IStorageService, FileStorageService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

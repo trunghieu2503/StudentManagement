@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StudentManagement.Data;
@@ -8,11 +9,22 @@ namespace StudentManagement.Services;
 public class StudentService : IStudentService{
     private readonly CourseDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IStorageService _storageService;
+    private const string USER_CONTENT_FOLDER_NAME = "user-content";
 
-    public StudentService(CourseDbContext context, IMapper mapper)
+    public StudentService(CourseDbContext context, IMapper mapper, IStorageService storageService)
     {
         _context = context;
         _mapper = mapper;
+        _storageService = storageService;
+    }
+
+    private async Task<string> SaveFile(IFormFile file)
+    {
+        var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName!.Trim('"');
+        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+        await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
+        return "/" + USER_CONTENT_FOLDER_NAME + "/" + fileName;
     }
 
     public async Task<PaginatedList<StudentViewModel>> GetAllFilter(string sortOrder, string currentFilter, string searchString, int? courseId, int? pageNumber, int pageSize)
@@ -55,6 +67,12 @@ public class StudentService : IStudentService{
     public async Task<int> Create(StudentRequest request)
     {
         var lesson = _mapper.Map<Student>(request);
+
+        // Save image file
+        if (request.Image != null)
+        {
+            lesson.ImagePath = await SaveFile(request.Image);
+        }
         _context.Add(lesson);
         return await _context.SaveChangesAsync();
     }
@@ -63,6 +81,8 @@ public class StudentService : IStudentService{
         var lesson = await _context.Students.FindAsync(id);
         if (lesson != null)
         {
+            if (!string.IsNullOrEmpty(lesson.ImagePath))
+                await _storageService.DeleteFileAsync(lesson.ImagePath.Replace("/" + USER_CONTENT_FOLDER_NAME + "/", ""));
             _context.Students.Remove(lesson);
         }
         return await _context.SaveChangesAsync();
@@ -70,7 +90,7 @@ public class StudentService : IStudentService{
     public async Task<StudentViewModel> GetById(int id)
     {
         var lesson = await _context.Students
-            .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
         return _mapper.Map<StudentViewModel>(lesson);
     }
     public async Task<int> Update(StudentViewModel request)
@@ -79,6 +99,14 @@ public class StudentService : IStudentService{
         {
             throw new Exception("Lesson does not exist");
         }
+        // Save image file
+        if (request.Image != null)
+        {
+            if (!string.IsNullOrEmpty(request.ImagePath))
+                await _storageService.DeleteFileAsync(request.ImagePath.Replace("/" + USER_CONTENT_FOLDER_NAME + "/", ""));
+            request.ImagePath = await SaveFile(request.Image);
+        }
+
         _context.Update(_mapper.Map<Student>(request));
         return await _context.SaveChangesAsync();
     }
