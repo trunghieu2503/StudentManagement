@@ -4,42 +4,55 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1 class="text-center my-4">Sửa sinh viên</h1>
 
-<h4>Student</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h4>Thông tin sinh viên</h4>
+        <hr />
         <form asp-action="Edit" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- Hidden Fields -->
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="ImagePath" />
-            <div class="form-group">
-                <label asp-for="Image" class="control-label"></label>
-                <input asp-for="Image" type="file" class="form-control" id="image-input" onchange="previewImage(event)"
-                    accept="image/*" />
+
+            <!-- Image Upload -->
+            <div class="form-group mb-3">
+                <label asp-for="Image" class="control-label">Ảnh sinh viên</label>
+                <input asp-for="Image" type="file" class="form-control" id="image-input" onchange="previewImage(event)" accept="image/*" />
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
+
+            <!-- Image Preview -->
             <div class="image-preview my-2">
                 <img id="preview" width="30%" class="img-fluid" src="@Model.ImagePath" alt="Preview" />
             </div>
-            <div class="form-group">
-                <label asp-for="StudentId" class="control-label"></label>
+
+            <!-- Student ID -->
+            <div class="form-group mb-3">
+                <label asp-for="StudentId" class="control-label">Mã sinh viên</label>
                 <input asp-for="StudentId" class="form-control" />
                 <span asp-validation-for="StudentId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="StudentName" class="control-label"></label>
+
+            <!-- Student Name -->
+            <div class="form-group mb-3">
+                <label asp-for="StudentName" class="control-label">Họ tên</label>
                 <input asp-for="StudentName" class="form-control" />
                 <span asp-validation-for="StudentName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DateOfBirth" class="control-label"></label>
+
+            <!-- Date of Birth -->
+            <div class="form-group mb-3">
+                <label asp-for="DateOfBirth" class="control-label">Ngày sinh</label>
                 <input asp-for="DateOfBirth" type="date" class="form-control" />
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
+
+            <!-- Gender -->
+            <div class="form-group mb-3">
+                <label asp-for="Gender" class="control-label">Giới tính</label>
                 <select asp-for="Gender" class="form-control">
                     <option value="">-- Chọn giới tính --</option>
                     <option value="Nam">Nam</option>
@@ -47,36 +60,29 @@
                 </select>
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CourseId" class="control-label"></label>
+
+            <!-- Course -->
+            <div class="form-group mb-3">
+                <label asp-for="CourseId" class="control-label">Lớp học</label>
                 <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseId"></select>
                 <span asp-validation-for="CourseId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <!-- Action Buttons -->
+            <div class="form-group d-flex justify-content-between">
+                <input type="submit" value="Lưu" class="btn btn-success btn-lg" />
+                <a asp-action="Index" class="btn btn-secondary btn-lg">Trở lại</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
-    <script>
-        ClassicEditor
-            .create(document.querySelector('#editor'))
-            .catch(error => {
-                console.error(error);
-            });
-    </script>
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
     <script>
         $(document).ready(function () {
+            // Image preview functionality
             $('#image-input').change(function () {
                 var input = this;
 
@@ -93,6 +99,7 @@
                 }
             });
 
+            // Check if Image Path is empty to hide the preview
             var imagePath = "@Model.ImagePath";
             if (imagePath == null || imagePath.trim() === "") {
                 $('#preview').addClass('d-none');

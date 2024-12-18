@@ -1,79 +1,81 @@
 @using StudentManagement
 @using StudentManagement.ViewModels
 @model PaginatedList<CourseViewModel>
+
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="text-center my-4">Danh sách lớp học</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
-<form asp-action="Index">
-    <div class="d-flex">
-        <input class="form-control" placeholder="Search..." value="@ViewData["CurrentFilter"]" type="text"
+<div class="d-flex justify-content-between mb-3">
+    <a asp-action="Create" class="btn btn-primary">Thêm mới</a>
+    <form asp-action="Index" class="d-flex w-50">
+        <input class="form-control" placeholder="Tìm kiếm..." value="@ViewData["CurrentFilter"]" type="text"
             autocomplete="off" name="SearchString" />
-    </div>
-</form>
+    </form>
+</div>
 
-<table class="table">
+<table class="table table-bordered">
     <thead>
         <tr>
-            <th>
+            <th class="align-middle" style="width: 10%;">
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["CourseIDSortParm"]"
                     asp-route-currentFilter="@ViewData["CurrentFilter"]">
                     @Html.DisplayNameFor(model => model[0].CourseID)
                 </a>
             </th>
-            <th>
+            <th class="align-middle" style="width: 30%;"> 
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["CourseNameSortParm"]"
                     asp-route-currentFilter="@ViewData["CurrentFilter"]">
                     @Html.DisplayNameFor(model => model[0].CourseName)
                 </a>
             </th>
-            <th>
+            <th class="align-middle" style="width: 30%;"> 
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["TeacherSortParm"]"
                     asp-route-currentFilter="@ViewData["CurrentFilter"]">
                     @Html.DisplayNameFor(model => model[0].Teacher)
                 </a>
             </th>
-            <th></th>
+            <th class="text-center align-middle" style="width: 30%;"> <!-- Fixed width for Actions -->
+                Thao tác
+            </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CourseID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CourseName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Teacher)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.CourseID)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.CourseName)
+                </td>
+                <td class="align-middle">
+                    @Html.DisplayFor(modelItem => item.Teacher)
+                </td>
+                <td class="text-center align-middle">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Sửa</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Chi tiết</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Xóa</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 
-@{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-}
-
-<a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex - 1)"
-    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-default @prevDisabled">
-    Previous
-</a>
-<a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex + 1)"
-    asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-default @nextDisabled">
-    Next
-</a>
+<div class="d-flex justify-content-between">
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+    <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex - 1)"
+        asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-default @prevDisabled">
+        <--
+    </a>
+    <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex + 1)"
+        asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-default @nextDisabled">
+        -->
+    </a>
+</div>
