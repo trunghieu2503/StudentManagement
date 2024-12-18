@@ -5,6 +5,7 @@ public class StudentRequest
 {
     public string? StudentId { get; set; }
     public string? StudentName { get; set; }
+    public DateTime DateOfBirth { get; set; }
     public string? Gender { get; set; }
     public int CourseId { get; set; }
 }

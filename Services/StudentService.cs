@@ -42,8 +42,10 @@ public class StudentService : IStudentService{
         lessons = sortOrder switch
         {
             "title_desc" => lessons.OrderByDescending(s => s.StudentId),
-            "date_created" => lessons.OrderBy(s => s.DateOfBirth),
-            "date_created_desc" => lessons.OrderByDescending(s => s.DateOfBirth),
+            "date_created" => lessons.OrderBy(s => s.StudentName),
+            "date_created_desc" => lessons.OrderByDescending(s => s.StudentName),
+            "name_created" => lessons.OrderBy(s => s.StudentName),
+            "name_created_desc" => lessons.OrderByDescending(s => s.StudentName),
             _ => lessons.OrderBy(s => s.StudentId),
         };
 

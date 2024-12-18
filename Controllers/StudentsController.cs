@@ -29,11 +29,11 @@ namespace StudentManagement.Controllers
         {
             ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("title") ? "title_desc" : "";
             ViewData["DateCreatedSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("date_created") ? "date_created_desc" : "date_created";
-
+            ViewData["NameCreatedSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("name_created") ? "name_created_desc" : "name_created";
             var courses = await _coursesService.GetAll();
             ViewData["CourseId"] = courses.Select(x => new SelectListItem()
             {
-                Text = x.CourseID,
+                Text = x.CourseName,
                 Value = x.Id.ToString(),
                 Selected = courseId.HasValue && courseId == x.Id
             });
@@ -57,7 +57,7 @@ namespace StudentManagement.Controllers
         // GET: Students/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["CourseId"] = new SelectList(await _coursesService.GetAll(), "Id", "CourseID");
+            ViewData["CourseId"] = new SelectList(await _coursesService.GetAll(), "Id", "CourseName");
             return View();
         }
 
@@ -84,7 +84,7 @@ namespace StudentManagement.Controllers
             {
                 return NotFound();
             }
-            ViewData["CourseId"] = new SelectList(await _coursesService.GetAll(), "Id", "CourseID");
+            ViewData["CourseId"] = new SelectList(await _coursesService.GetAll(), "Id", "CourseName");
             return View(lesson);
         }
 

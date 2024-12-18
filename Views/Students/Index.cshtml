@@ -30,19 +30,19 @@
                 </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].StudentName)
-            </th>
-            <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["DateCreatedSortParm"]"
                     asp-route-currentFilter="@ViewData["CurrentFilter"]">
-                    @Html.DisplayNameFor(model => model[0].DateOfBirth)
+                    @Html.DisplayNameFor(model => model[0].StudentName)
                 </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].Gender)
+            <a asp-action="Index" asp-route-sortOrder="@ViewData["NameCreatedSortParm"]"
+                asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                @Html.DisplayNameFor(model => model[0].DateOfBirth)
+            </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].CourseNAME)
+                @Html.DisplayNameFor(model => model[0].Gender)
             </th>
             <th></th>
         </tr>
@@ -62,9 +62,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Gender)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CourseId)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

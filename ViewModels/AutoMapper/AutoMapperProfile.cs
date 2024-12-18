@@ -12,7 +12,6 @@ public class AutoMapperProfile : Profile
 
         CreateMap<Student, StudentViewModel>();
         CreateMap<StudentViewModel, Student>();
-        CreateMap<StudentRequest, Student>()
-        .ForMember(des => des.DateOfBirth, opt => opt.MapFrom(src => DateTime.Now));
+        CreateMap<StudentRequest, Student>();
     }
 }
