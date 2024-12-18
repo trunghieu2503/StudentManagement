@@ -71,11 +71,11 @@
         var nextDisabled = !Model.HasNextPage ? "disabled" : "";
     }
     <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex - 1)"
-        asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-default @prevDisabled">
+        asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-secondary @prevDisabled">
         <--
     </a>
     <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@(Model.PageIndex + 1)"
-        asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-default @nextDisabled">
+        asp-route-currentFilter="@ViewData["CurrentFilter"]" class="btn btn-secondary @nextDisabled">
         -->
     </a>
 </div>
