@@ -1,4 +1,4 @@
-@model StudentManagement.Data.Entities.Student
+@model StudentManagement.ViewModels.StudentViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -22,23 +22,23 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.StudentName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DateOfBirth)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DateOfBirth)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Gender)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Gender)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Course)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseNAME)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Course.Id)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseId)
         </dd>
     </dl>
 </div>

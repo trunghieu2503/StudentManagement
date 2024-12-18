@@ -9,5 +9,10 @@ public class AutoMapperProfile : Profile
         CreateMap<Course, CourseViewModel>();
         CreateMap<CourseViewModel, Course>();
         CreateMap<CourseRequest, Course>();
+
+        CreateMap<Student, StudentViewModel>();
+        CreateMap<StudentViewModel, Student>();
+        CreateMap<StudentRequest, Student>()
+        .ForMember(des => des.DateOfBirth, opt => opt.MapFrom(src => DateTime.Now));
     }
 }

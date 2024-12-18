@@ -14,6 +14,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 //DI configuration
 builder.Services.AddTransient<ICoursesService, CoursesService>();
+builder.Services.AddTransient<IStudentService, StudentService>();
 
 var app = builder.Build();
 

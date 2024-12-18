@@ -7,48 +7,57 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudentManagement.Data;
 using StudentManagement.Data.Entities;
+using StudentManagement.Services;
+using StudentManagement.ViewModels;
 
 namespace StudentManagement.Controllers
 {
     public class StudentsController : Controller
     {
+        private readonly IStudentService _lessonsService;
+        private readonly ICoursesService _coursesService;
         private readonly CourseDbContext _context;
-
-        public StudentsController(CourseDbContext context)
+        int PAGESIZE = 5;
+        public StudentsController(IStudentService lessonsService, ICoursesService coursesService)
         {
-            _context = context;
+            _lessonsService = lessonsService;
+            _coursesService = coursesService;
         }
 
         // GET: Students
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? courseId, int? pageNumber)
         {
-            var courseDbContext = _context.Students.Include(s => s.Course);
-            return View(await courseDbContext.ToListAsync());
+            ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("title") ? "title_desc" : "";
+            ViewData["DateCreatedSortParm"] = String.IsNullOrEmpty(sortOrder) || sortOrder.Equals("date_created") ? "date_created_desc" : "date_created";
+
+            var courses = await _coursesService.GetAll();
+            ViewData["CourseId"] = courses.Select(x => new SelectListItem()
+            {
+                Text = x.CourseID,
+                Value = x.Id.ToString(),
+                Selected = courseId.HasValue && courseId == x.Id
+            });
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentSort"] = sortOrder;
+
+            return View(await _lessonsService.GetAllFilter(sortOrder, currentFilter, searchString, courseId, pageNumber, PAGESIZE));
         }
 
         // GET: Students/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
+            var lesson = await _lessonsService.GetById(id);
+            if (lesson == null)
             {
                 return NotFound();
             }
-
-            var student = await _context.Students
-                .Include(s => s.Course)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-
-            return View(student);
+            return View(lesson);
         }
 
         // GET: Students/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id");
+            ViewData["CourseId"] = new SelectList(await _coursesService.GetAll(), "Id", "CourseID");
             return View();
         }
 
@@ -57,33 +66,26 @@ namespace StudentManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StudentId,StudentName,DateOfBirth,Gender,CourseId")] Student student)
+        public async Task<IActionResult> Create(StudentRequest request)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(student);
-                await _context.SaveChangesAsync();
+                await _lessonsService.Create(request);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", student.CourseId);
-            return View(student);
+            return View(request);
         }
 
         // GET: Students/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
+            var lesson = await _lessonsService.GetById(id);
+            if (lesson == null)
             {
                 return NotFound();
             }
-
-            var student = await _context.Students.FindAsync(id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", student.CourseId);
-            return View(student);
+            ViewData["CourseId"] = new SelectList(await _coursesService.GetAll(), "Id", "CourseID");
+            return View(lesson);
         }
 
         // POST: Students/Edit/5
@@ -91,54 +93,30 @@ namespace StudentManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,StudentId,StudentName,DateOfBirth,Gender,CourseId")] Student student)
+        public async Task<IActionResult> Edit(int id, StudentViewModel lesson)
         {
-            if (id != student.Id)
+            if (id != lesson.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(student);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StudentExists(student.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _lessonsService.Update(lesson);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", student.CourseId);
-            return View(student);
+            return View(lesson);
         }
 
         // GET: Students/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
+            var lesson = await _lessonsService.GetById(id);
+            if (lesson == null)
             {
                 return NotFound();
             }
-
-            var student = await _context.Students
-                .Include(s => s.Course)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-
-            return View(student);
+            return View(lesson);
         }
 
         // POST: Students/Delete/5
@@ -146,19 +124,8 @@ namespace StudentManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var student = await _context.Students.FindAsync(id);
-            if (student != null)
-            {
-                _context.Students.Remove(student);
-            }
-
-            await _context.SaveChangesAsync();
+            await _lessonsService.Delete(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool StudentExists(int id)
-        {
-            return _context.Students.Any(e => e.Id == id);
         }
     }
 }
