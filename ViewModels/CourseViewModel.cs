@@ -2,13 +2,13 @@ using System.ComponentModel.DataAnnotations;
 namespace StudentManagement.ViewModels;
 public class CourseRequest
 {
-    [Required]
+    [Required(ErrorMessage = "Hãy nhập mã lớp")]
     [Display(Name ="Mã lớp")]
     public string? CourseID { get; set; }
-    [Required]
+    [Required(ErrorMessage = "Hãy nhập tên lớp")]
     [Display(Name = "Tên lớp")]
     public string? CourseName { get; set; }
-    [Required]
+    [Required(ErrorMessage = "Hãy nhập tên giáo viên")]
     [Display(Name = "Giáo viên")]
     public string? Teacher { get; set; }
 }
