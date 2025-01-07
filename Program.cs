@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using StudentManagement.Data;
 using StudentManagement.Services;
 
@@ -15,6 +16,12 @@ builder.Services.AddAutoMapper(typeof(Program));
 //DI configuration
 builder.Services.AddTransient<ICoursesService, CoursesService>();
 builder.Services.AddTransient<IStudentService, StudentService>();
+
+// Swagger
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger Course Management", Version = "v1" });
+});
 
 //File Storage
 builder.Services.AddTransient<IStorageService, FileStorageService>();
@@ -40,12 +47,18 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.UseSwagger();
+
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Course Management V1");
+});
+
 app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Students}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();
